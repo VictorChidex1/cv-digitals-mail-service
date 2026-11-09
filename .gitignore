@@ -1,0 +1,22 @@
+# ---------------------------------------------------------------------------
+# Local-only material — must stay on this Mac.
+# Nothing in these folders is ever to be committed or pushed to GitHub.
+# ---------------------------------------------------------------------------
+
+# Agent rules (governing engineering rules kept local)
+.agents/rules/
+
+# Project documentation and context
+Project-explanations/
+Project explanations/
+
+# macOS metadata
+.DS_Store
+
+# Dependencies are installed, never committed
+node_modules/
+
+# Local secrets (see context.md §11: never commit .env)
+.env
+.env.*
+!.env.example
