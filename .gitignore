@@ -20,3 +20,12 @@ node_modules/
 .env
 .env.*
 !.env.example
+
+# Firebase Admin SDK service-account keys and emulator artifacts.
+# These are private credentials; never commit them to this (public) repo.
+*-firebase-adminsdk-*.json
+firebase-service-account*.json
+service-account*.json
+.firebase/
+firebase-debug.log
+firebase-export-*/
