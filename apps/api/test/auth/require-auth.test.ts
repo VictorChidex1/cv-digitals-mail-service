@@ -18,7 +18,7 @@ describe("route protection", () => {
     await withServer(app, async (baseUrl) => {
       const response = await fetch(`${baseUrl}/auth/me`);
       expect(response.status).toBe(401);
-      expect(await response.json()).toEqual({ error: "unauthorized" });
+      expect(await response.json()).toMatchObject({ error: "unauthorized" });
     });
   });
 
@@ -51,7 +51,7 @@ describe("route protection", () => {
         headers: { authorization: "Bearer outsider-token" },
       });
       expect(response.status).toBe(403);
-      expect(await response.json()).toEqual({ error: "forbidden" });
+      expect(await response.json()).toMatchObject({ error: "forbidden" });
     });
   });
 

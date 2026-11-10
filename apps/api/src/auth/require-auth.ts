@@ -48,7 +48,10 @@ export function createRequireAuth(deps: AuthDependencies) {
     const token = bearerToken(req.header("authorization"));
 
     if (token === null) {
-      res.status(401).json({ error: "unauthorized" });
+      res.status(401).json({
+        error: "unauthorized",
+        requestId: String(res.locals["requestId"] ?? ""),
+      });
       return;
     }
 
@@ -56,12 +59,18 @@ export function createRequireAuth(deps: AuthDependencies) {
     try {
       identity = await deps.verifyToken(token);
     } catch {
-      res.status(401).json({ error: "unauthorized" });
+      res.status(401).json({
+        error: "unauthorized",
+        requestId: String(res.locals["requestId"] ?? ""),
+      });
       return;
     }
 
     if (!deps.allowlist.allows(identity)) {
-      res.status(403).json({ error: "forbidden" });
+      res.status(403).json({
+        error: "forbidden",
+        requestId: String(res.locals["requestId"] ?? ""),
+      });
       return;
     }
 

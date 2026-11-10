@@ -6,15 +6,19 @@ import { createApp } from "./app.js";
 import { env } from "./config/env.js";
 import {
   assertEnvironmentSeparation,
+  assertLoopbackBinding,
   environmentWarnings,
 } from "./config/environment.js";
 import { openDatabase } from "./db/client.js";
 import { runMigrations } from "./db/migrate.js";
+import { logger } from "./http/logger.js";
 import { initFirebaseAdmin } from "./lib/firebase-admin.js";
 
 assertEnvironmentSeparation(env);
+assertLoopbackBinding(env.host, env.allowNonLoopback);
+
 for (const warning of environmentWarnings(env)) {
-  console.warn(`[api] warning: ${warning}`);
+  logger.warn(warning);
 }
 
 /**
@@ -42,20 +46,20 @@ const app = createApp({
 });
 
 const server = app.listen(env.port, env.host, () => {
-  console.log(`[api] listening on http://${env.host}:${env.port}`);
-  console.log(
-    `[api] database: ${database.path} (${appliedMigrations} migration(s))`,
-  );
-  console.log(
-    `[api] firebase auth emulator: ${env.firebaseAuthEmulatorHost ?? "not configured"}`,
-  );
-  console.log(
-    `[api] auth allowlist: ${allowlist.isConfigured ? "configured" : "EMPTY (all requests will be rejected)"}`,
+  logger.info(
+    {
+      host: env.host,
+      port: env.port,
+      migrations: appliedMigrations,
+      authEmulator: env.firebaseAuthEmulatorHost !== undefined,
+      allowlistConfigured: allowlist.isConfigured,
+    },
+    "api listening",
   );
 });
 
 function shutdown(signal: string): void {
-  console.log(`[api] ${signal} received, closing server`);
+  logger.info({ signal }, "shutting down");
   server.close(() => {
     database.close();
     process.exit(0);

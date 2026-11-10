@@ -5,6 +5,8 @@ export interface EnvironmentConfig {
   authAllowedUids: string[];
 }
 
+const LOOPBACK_HOSTS = new Set(["127.0.0.1", "::1", "localhost"]);
+
 /**
  * Emulator configuration is local-only. Refusing to start is deliberate: a
  * production process pointed at the Auth emulator would authenticate nobody and
@@ -18,6 +20,23 @@ export function assertEnvironmentSeparation(config: EnvironmentConfig): void {
         "Emulator configuration must never reach a production environment.",
     );
   }
+}
+
+/**
+ * The API is a local service. Binding to anything other than loopback exposes
+ * it to the LAN, which the project rules forbid without explicit approval.
+ */
+export function assertLoopbackBinding(
+  host: string,
+  allowNonLoopback: boolean,
+): void {
+  if (LOOPBACK_HOSTS.has(host)) return;
+  if (allowNonLoopback) return;
+
+  throw new Error(
+    `Refusing to start: HOST is "${host}", which is not loopback. ` +
+      "Set ALLOW_NON_LOOPBACK=true only with explicit approval to expose the API.",
+  );
 }
 
 export function environmentWarnings(config: EnvironmentConfig): string[] {

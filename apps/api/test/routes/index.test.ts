@@ -28,7 +28,7 @@ describe("API index", () => {
     await withServer(app, async (baseUrl) => {
       const response = await fetch(`${baseUrl}/banana`);
       expect(response.status).toBe(404);
-      expect(await response.json()).toEqual({ error: "not_found" });
+      expect(await response.json()).toMatchObject({ error: "not_found" });
     });
   });
 });
