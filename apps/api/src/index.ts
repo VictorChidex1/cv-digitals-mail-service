@@ -1,14 +1,21 @@
 import "dotenv/config";
 
-import cors from "cors";
-import express from "express";
-import helmet from "helmet";
-
+import { createAllowlist } from "./auth/allowlist.js";
+import { createFirebaseTokenVerifier } from "./auth/verify-token.js";
+import { createApp } from "./app.js";
 import { env } from "./config/env.js";
+import {
+  assertEnvironmentSeparation,
+  environmentWarnings,
+} from "./config/environment.js";
 import { openDatabase } from "./db/client.js";
 import { runMigrations } from "./db/migrate.js";
 import { initFirebaseAdmin } from "./lib/firebase-admin.js";
-import { createHealthRouter } from "./routes/health.js";
+
+assertEnvironmentSeparation(env);
+for (const warning of environmentWarnings(env)) {
+  console.warn(`[api] warning: ${warning}`);
+}
 
 /**
  * Open the database and bring its schema up to date before serving. A failure
@@ -20,28 +27,30 @@ const appliedMigrations = runMigrations(database);
 
 initFirebaseAdmin();
 
-const app = express();
+const allowlist = createAllowlist({
+  emails: env.authAllowedEmails,
+  uids: env.authAllowedUids,
+});
 
-app.disable("x-powered-by");
-app.use(helmet());
-app.use(
-  cors({
-    origin: env.webOrigin,
-  }),
-);
-app.use(express.json({ limit: "1mb" }));
-
-app.use("/health", createHealthRouter({ database, appliedMigrations }));
-
-app.use((_req, res) => {
-  res.status(404).json({ error: "not_found" });
+const app = createApp({
+  database,
+  appliedMigrations,
+  auth: {
+    verifyToken: createFirebaseTokenVerifier(false),
+    allowlist,
+  },
 });
 
 const server = app.listen(env.port, env.host, () => {
   console.log(`[api] listening on http://${env.host}:${env.port}`);
-  console.log(`[api] database: ${database.path} (${appliedMigrations} migration(s))`);
+  console.log(
+    `[api] database: ${database.path} (${appliedMigrations} migration(s))`,
+  );
   console.log(
     `[api] firebase auth emulator: ${env.firebaseAuthEmulatorHost ?? "not configured"}`,
+  );
+  console.log(
+    `[api] auth allowlist: ${allowlist.isConfigured ? "configured" : "EMPTY (all requests will be rejected)"}`,
   );
 });
 

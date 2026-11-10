@@ -12,13 +12,17 @@
   "scripts": {
     "dev": "concurrently -k -n web,api,auth -c blue,green,magenta \"npm:dev:web\" \"npm:dev:api\" \"npm:dev:auth\"",
     "dev:web": "npm run dev -w @cv-digitals/web",
+    "dev:web:e2e": "npm run dev:e2e -w @cv-digitals/web",
     "dev:api": "npm run dev -w @cv-digitals/api",
     "dev:auth": "firebase emulators:start --only auth --project cv-digitals-mail-dev",
     "build": "npm run build --workspaces --if-present",
-    "typecheck": "npm run typecheck --workspaces --if-present",
-    "test": "npm run test --workspaces --if-present"
+    "typecheck": "tsc --noEmit -p tsconfig.e2e.json && npm run typecheck --workspaces --if-present",
+    "test": "npm run test --workspaces --if-present",
+    "test:api:emulator": "firebase emulators:exec --only auth --project cv-digitals-mail-dev \"npm test -w @cv-digitals/api\"",
+    "test:e2e": "firebase emulators:exec --only auth --project cv-digitals-mail-dev \"npm run auth:seed -w @cv-digitals/api && playwright test\""
   },
   "devDependencies": {
+    "@playwright/test": "^1.65.0",
     "concurrently": "^10.0.7",
     "typescript": "~5.9.3"
   }

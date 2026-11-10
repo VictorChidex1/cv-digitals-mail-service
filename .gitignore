@@ -23,6 +23,12 @@ dist/
 *.tsbuildinfo
 coverage/
 
+# Test artifacts
+test-results/
+playwright-report/
+blob-report/
+.playwright/
+
 # Local SQLite database (never commit application data)
 data/
 *.db
