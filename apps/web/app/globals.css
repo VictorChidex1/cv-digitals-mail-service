@@ -155,3 +155,27 @@ ul.checks {
     flex-direction: column;
   }
 }
+
+.status-actions {
+  display: flex;
+  gap: 18px;
+  margin: 14px 0 0;
+}
+
+.text-link {
+  color: #7fb2e5;
+  font-size: 14px;
+  text-decoration: none;
+}
+
+.text-link:hover {
+  text-decoration: underline;
+}
+
+code {
+  padding: 1px 5px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: #0f1214;
+  font-size: 0.9em;
+}

@@ -29,6 +29,10 @@ playwright-report/
 blob-report/
 .playwright/
 
+# Local development state
+.dev.pid
+.emulator-data/
+
 # Local SQLite database (never commit application data)
 data/
 *.db

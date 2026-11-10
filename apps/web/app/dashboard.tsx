@@ -1,6 +1,7 @@
 "use client";
 
 import { onAuthStateChanged, type User } from "firebase/auth";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -134,6 +135,11 @@ export function Dashboard() {
           <dt>Auth mode</dt>
           <dd>{isEmulatorMode ? "Firebase Auth emulator" : "Production project"}</dd>
         </dl>
+        <p className="status-actions">
+          <Link className="text-link" href="/status">
+            Open service status
+          </Link>
+        </p>
       </section>
 
       <section className="panel">

@@ -8,6 +8,7 @@ import { env } from "./config/env.js";
 import type { DatabaseHandle } from "./db/client.js";
 import { createAuthRouter } from "./routes/auth.js";
 import { createHealthRouter } from "./routes/health.js";
+import { createIndexRouter } from "./routes/index.js";
 
 export interface AppDependencies {
   database: DatabaseHandle;
@@ -43,6 +44,7 @@ export function createApp(deps: AppDependencies): Express {
   );
 
   const requireAuth = createRequireAuth(deps.auth);
+  app.use(createIndexRouter());
   app.use("/auth", requireAuth, createAuthRouter());
 
   app.use((_req, res) => {
