@@ -1,23 +1,24 @@
 {
-  "name": "cv-digitals-mail-service",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+  "name": "cv-digitals-mail",
+  "version": "0.1.0",
+  "private": true,
+  "description": "CV Digitals Mail — local-first outreach CRM and sending operations platform",
+  "workspaces": [
+    "apps/*"
+  ],
+  "engines": {
+    "node": ">=24"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "type": "commonjs",
-  "dependencies": {
-    "cors": "^2.8.6",
-    "dotenv": "^18.0.10",
-    "express": "^5.3.0",
-    "helmet": "^8.3.0",
-    "nodemailer": "^10.4.0"
+  "scripts": {
+    "dev": "concurrently -k -n web,api,auth -c blue,green,magenta \"npm:dev:web\" \"npm:dev:api\" \"npm:dev:auth\"",
+    "dev:web": "npm run dev -w @cv-digitals/web",
+    "dev:api": "npm run dev -w @cv-digitals/api",
+    "dev:auth": "firebase emulators:start --only auth --project cv-digitals-mail-dev",
+    "build": "npm run build --workspaces --if-present",
+    "typecheck": "npm run typecheck --workspaces --if-present"
   },
   "devDependencies": {
-    "nodemon": "^3.1.14"
+    "concurrently": "^10.0.7",
+    "typescript": "~5.9.3"
   }
 }

@@ -16,6 +16,13 @@ Project explanations/
 # Dependencies are installed, never committed
 node_modules/
 
+# Build output
+.next/
+out/
+dist/
+*.tsbuildinfo
+coverage/
+
 # Local secrets (see context.md §11: never commit .env)
 .env
 .env.*
