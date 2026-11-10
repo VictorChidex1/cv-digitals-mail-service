@@ -1,3 +1,6 @@
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+
 /**
  * Runtime configuration for the local API.
  *
@@ -5,6 +8,17 @@
  * environment. Nothing here is a secret; secrets are introduced in later
  * phases through an approved credential mechanism.
  */
+
+const here = path.dirname(fileURLToPath(import.meta.url));
+const defaultDatabasePath = path.resolve(
+  here,
+  "..",
+  "..",
+  "..",
+  "..",
+  "data",
+  "cv-digitals-mail.db",
+);
 
 function readPort(raw: string | undefined, fallback: number): number {
   if (raw === undefined || raw.trim() === "") return fallback;
@@ -26,4 +40,5 @@ export const env = {
    * never be set in production.
    */
   firebaseAuthEmulatorHost: process.env.FIREBASE_AUTH_EMULATOR_HOST,
+  databasePath: process.env.DATABASE_PATH?.trim() || defaultDatabasePath,
 } as const;

@@ -15,7 +15,8 @@
     "dev:api": "npm run dev -w @cv-digitals/api",
     "dev:auth": "firebase emulators:start --only auth --project cv-digitals-mail-dev",
     "build": "npm run build --workspaces --if-present",
-    "typecheck": "npm run typecheck --workspaces --if-present"
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "test": "npm run test --workspaces --if-present"
   },
   "devDependencies": {
     "concurrently": "^10.0.7",

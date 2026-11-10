@@ -23,6 +23,12 @@ dist/
 *.tsbuildinfo
 coverage/
 
+# Local SQLite database (never commit application data)
+data/
+*.db
+*.db-wal
+*.db-shm
+
 # Local secrets (see context.md §11: never commit .env)
 .env
 .env.*
