@@ -4,14 +4,16 @@ import { onAuthStateChanged } from "firebase/auth";
 import { useRouter } from "next/navigation";
 import { useEffect, useState, type FormEvent, type ReactNode } from "react";
 
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
   sendResetEmail,
   signInWithEmail,
   signInWithGoogle,
 } from "@/lib/auth-actions";
 import { authEmulatorUrl, getFirebaseAuth } from "@/lib/firebase";
-
-import styles from "./login.module.css";
 
 type Pending = "email" | "google" | "reset" | null;
 
@@ -120,59 +122,96 @@ export function LoginForm() {
   }
 
   return (
-    <div className={styles.page}>
-      <aside className={styles.brand}>
-        <div>
-          <div className={styles.brandMark}>
-            <span className={styles.monogram}>CV</span>
-            <span>CV Digitals Mail</span>
+    <div className="grid min-h-dvh lg:grid-cols-[1.05fr_1fr]">
+      <aside className="relative hidden flex-col justify-between overflow-hidden border-r border-border bg-card p-12 lg:flex">
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 bg-[radial-gradient(900px_500px_at_10%_0%,rgba(63,191,119,0.10),transparent_60%),radial-gradient(700px_400px_at_100%_100%,rgba(127,178,229,0.08),transparent_55%)]"
+        />
+
+        <div className="relative">
+          <div className="flex items-center gap-3 text-[11px] uppercase tracking-[0.16em] text-muted-foreground">
+            <span className="grid size-9 place-items-center rounded-lg border border-border bg-background text-[11px] font-semibold text-foreground">
+              CV
+            </span>
+            CV Digitals Mail
           </div>
-          <h2 className={styles.headline}>
+
+          <h2 className="mt-10 max-w-[20ch] text-[clamp(2rem,3.2vw,2.75rem)] font-semibold leading-[1.12] tracking-tight">
             Outreach operations, under your control.
           </h2>
-          <p className={styles.brandCopy}>
+          <p className="mt-4 max-w-[46ch] text-[15px] text-muted-foreground">
             Researched prospects, deliberate approval, and a complete local
             record of everything you send.
           </p>
-          <ul className={styles.points}>
-            <li>Personalised drafts, never bulk blasts</li>
-            <li>Human approval before every send</li>
-            <li>Your data stays on this Mac</li>
+
+          <ul className="mt-8 space-y-2.5 text-sm text-muted-foreground">
+            {[
+              "Personalised drafts, never bulk blasts",
+              "Human approval before every send",
+              "Your data stays on this Mac",
+            ].map((point) => (
+              <li key={point} className="flex gap-3">
+                <span
+                  className="mt-2 size-1.5 shrink-0 rounded-full bg-primary"
+                  aria-hidden="true"
+                />
+                {point}
+              </li>
+            ))}
           </ul>
         </div>
-        <div className={styles.brandFooter}>
+
+        <div className="relative flex items-center gap-3 text-xs text-muted-foreground">
           {authEmulatorUrl !== null ? (
-            <span className={styles.badge}>Auth emulator</span>
+            <Badge
+              variant="outline"
+              className="border-amber-500/40 text-amber-300"
+            >
+              Auth emulator
+            </Badge>
           ) : null}
           <span>Local-first</span>
         </div>
       </aside>
 
-      <section className={styles.formSide}>
-        <div className={styles.card}>
-          <h1>Welcome back</h1>
-          <p className={styles.sub}>
+      <section className="flex items-center justify-center px-5 py-10 sm:px-8">
+        <div className="w-full max-w-sm">
+          <div className="mb-8 flex items-center gap-3 text-[11px] uppercase tracking-[0.16em] text-muted-foreground lg:hidden">
+            <span className="grid size-8 place-items-center rounded-md border border-border bg-card text-[10px] font-semibold text-foreground">
+              CV
+            </span>
+            CV Digitals Mail
+          </div>
+
+          <h1 className="text-2xl font-semibold tracking-tight">Welcome back</h1>
+          <p className="mt-1 text-sm text-muted-foreground">
             Sign in to continue to your outreach workspace.
           </p>
 
           {error !== null ? (
-            <p className={styles.alert} role="alert" data-testid="login-error">
+            <p
+              role="alert"
+              data-testid="login-error"
+              className="mt-5 rounded-lg border border-destructive/40 bg-destructive/10 px-3 py-2.5 text-sm text-red-300"
+            >
               {error}
             </p>
           ) : null}
           {notice !== null ? (
-            <p className={styles.notice} role="status" data-testid="login-notice">
+            <p
+              role="status"
+              data-testid="login-notice"
+              className="mt-5 rounded-lg border border-primary/40 bg-primary/10 px-3 py-2.5 text-sm text-emerald-200"
+            >
               {notice}
             </p>
           ) : null}
 
-          <form onSubmit={handleEmailSubmit} noValidate>
-            <div className={styles.field}>
-              <label className={styles.label} htmlFor="email">
-                Email
-              </label>
-              <input
-                className={styles.input}
+          <form onSubmit={handleEmailSubmit} noValidate className="mt-6 space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="email">Email</Label>
+              <Input
                 id="email"
                 name="email"
                 type="email"
@@ -182,16 +221,14 @@ export function LoginForm() {
                 onChange={(event) => setEmail(event.target.value)}
                 aria-invalid={error !== null ? true : undefined}
                 required
+                className="h-10 bg-background"
               />
             </div>
 
-            <div className={styles.field}>
-              <label className={styles.label} htmlFor="password">
-                Password
-              </label>
-              <div className={styles.inputWrap}>
-                <input
-                  className={styles.input}
+            <div className="space-y-2">
+              <Label htmlFor="password">Password</Label>
+              <div className="relative">
+                <Input
                   id="password"
                   name="password"
                   type={showPassword ? "text" : "password"}
@@ -201,47 +238,56 @@ export function LoginForm() {
                   onChange={(event) => setPassword(event.target.value)}
                   aria-invalid={error !== null ? true : undefined}
                   required
+                  className="h-10 bg-background pr-11"
                 />
-                <button
+                <Button
                   type="button"
-                  className={styles.eye}
+                  variant="ghost"
+                  size="icon-sm"
+                  className="absolute right-1 top-1/2 -translate-y-1/2"
                   onClick={() => setShowPassword((visible) => !visible)}
                   aria-label={showPassword ? "Hide password" : "Show password"}
                   aria-pressed={showPassword}
                   aria-controls="password"
                 >
                   {showPassword ? <EyeOffIcon /> : <EyeIcon />}
-                </button>
+                </Button>
               </div>
             </div>
 
-            <button className={styles.submit} type="submit" disabled={busy}>
+            <Button type="submit" className="h-10 w-full" disabled={busy}>
               {pending === "email" ? "Signing in…" : "Sign in"}
-            </button>
+            </Button>
           </form>
 
-          <div className={styles.divider}>or</div>
+          <div className="my-5 flex items-center gap-3 text-xs text-muted-foreground">
+            <span className="h-px flex-1 bg-border" />
+            or
+            <span className="h-px flex-1 bg-border" />
+          </div>
 
-          <button
-            className={styles.google}
+          <Button
+            variant="outline"
+            className="h-10 w-full"
             type="button"
             onClick={handleGoogle}
             disabled={busy}
           >
             <GoogleIcon />
             {pending === "google" ? "Opening Google…" : "Continue with Google"}
-          </button>
+          </Button>
 
-          <button
+          <Button
             type="button"
-            className={styles.linkButton}
+            variant="link"
+            className="mt-3 h-auto w-full text-xs text-muted-foreground"
             onClick={handleReset}
             disabled={busy}
           >
             {pending === "reset" ? "Sending reset email…" : "Forgot password?"}
-          </button>
+          </Button>
 
-          <p className={styles.hint}>
+          <p className="mt-6 text-center text-xs text-muted-foreground">
             Access is limited to the operator account for this workspace.
           </p>
         </div>

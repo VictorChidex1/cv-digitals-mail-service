@@ -1,5 +1,16 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import type { ReactNode } from "react";
+
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 
 export const dynamic = "force-dynamic";
 
@@ -45,88 +56,140 @@ export default async function StatusPage() {
   const result = await fetchHealth();
 
   return (
-    <main>
-      <p className="eyebrow">CV Digitals Mail</p>
-      <h1>Service status</h1>
-      <p className="lede">
-        Live result of <code>GET /health</code> on the local Express API. This
-        page reports what the API says; it does not invent a status.
+    <main className="mx-auto w-full max-w-3xl px-4 py-10 sm:px-6">
+      <div className="mb-6 flex items-center justify-between gap-3">
+        <p className="text-[11px] uppercase tracking-[0.16em] text-muted-foreground">
+          CV Digitals Mail
+        </p>
+        <Button asChild variant="ghost" size="sm">
+          <Link href="/">Back to workspace</Link>
+        </Button>
+      </div>
+
+      <h1 className="text-2xl font-semibold tracking-tight">Service status</h1>
+      <p className="mt-1 max-w-2xl text-sm text-muted-foreground">
+        Live result of <code className="rounded bg-card px-1 py-0.5">GET /health</code>{" "}
+        on the local Express API. This page reports what the API says; it does not
+        invent a status.
       </p>
 
       {result.ok ? (
-        <>
-          <section className="panel">
-            <h2>Summary</h2>
-            <dl>
-              <dt>Overall</dt>
-              <dd
-                className={`state state-${result.data.status === "ok" ? "ok" : "err"}`}
-                data-testid="status-overall"
-              >
-                {result.data.status}
-              </dd>
-              <dt>Service</dt>
-              <dd data-testid="status-service">{result.data.service}</dd>
-              <dt>Version</dt>
-              <dd>{result.data.version}</dd>
-              <dt>Environment</dt>
-              <dd>{result.data.environment}</dd>
-              <dt>Checked at</dt>
-              <dd>{result.data.timestamp}</dd>
-            </dl>
-          </section>
+        <div className="mt-6 space-y-4">
+          <Card>
+            <CardHeader>
+              <CardTitle>Summary</CardTitle>
+              <CardDescription>Identity and environment of the responder.</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-3 text-sm">
+              <Row label="Overall">
+                <Badge
+                  data-testid="status-overall"
+                  variant="outline"
+                  className={
+                    result.data.status === "ok"
+                      ? "border-primary/40 text-primary"
+                      : "border-destructive/40 text-red-300"
+                  }
+                >
+                  {result.data.status}
+                </Badge>
+              </Row>
+              <Row label="Service">
+                <span data-testid="status-service">{result.data.service}</span>
+              </Row>
+              <Row label="Version">{result.data.version}</Row>
+              <Row label="Environment">{result.data.environment}</Row>
+              <Row label="Checked at">
+                <span className="tabular-nums">{result.data.timestamp}</span>
+              </Row>
+            </CardContent>
+          </Card>
 
-          <section className="panel">
-            <h2>Database</h2>
-            <dl>
-              <dt>Status</dt>
-              <dd
-                className={`state state-${result.data.database.status === "ok" ? "ok" : "err"}`}
-                data-testid="status-database"
-              >
-                {result.data.database.status}
-              </dd>
-              <dt>Applied migrations</dt>
-              <dd data-testid="status-migrations">
-                {result.data.database.migrations}
-              </dd>
-            </dl>
-          </section>
+          <Card>
+            <CardHeader>
+              <CardTitle>Database</CardTitle>
+              <CardDescription>SQLite on this Mac.</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-3 text-sm">
+              <Row label="Status">
+                <Badge
+                  data-testid="status-database"
+                  variant="outline"
+                  className={
+                    result.data.database.status === "ok"
+                      ? "border-primary/40 text-primary"
+                      : "border-destructive/40 text-red-300"
+                  }
+                >
+                  {result.data.database.status}
+                </Badge>
+              </Row>
+              <Row label="Applied migrations">
+                <span data-testid="status-migrations" className="tabular-nums">
+                  {result.data.database.migrations}
+                </span>
+              </Row>
+            </CardContent>
+          </Card>
 
-          <section className="panel">
-            <h2>Firebase</h2>
-            <dl>
-              <dt>Project</dt>
-              <dd>{result.data.firebase.projectId}</dd>
-              <dt>Auth target</dt>
-              <dd>
+          <Card>
+            <CardHeader>
+              <CardTitle>Firebase</CardTitle>
+              <CardDescription>Identity provider configuration.</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-3 text-sm">
+              <Row label="Project">{result.data.firebase.projectId}</Row>
+              <Row label="Auth target">
                 {result.data.firebase.authEmulator
                   ? "Local Auth emulator"
                   : "Production project"}
-              </dd>
-            </dl>
-          </section>
-        </>
+              </Row>
+            </CardContent>
+          </Card>
+        </div>
       ) : (
-        <section className="panel">
-          <h2>Unavailable</h2>
-          <p className="state state-err" role="alert" data-testid="status-error">
-            {result.message}
-          </p>
-          <p className="lede">
-            Start the stack with <code>npm run dev</code> and reload this page.
-          </p>
-        </section>
+        <Card className="mt-6 border-destructive/40">
+          <CardHeader>
+            <CardTitle>Unavailable</CardTitle>
+            <CardDescription>
+              Start the stack with <code>npm run dev</code> and reload this page.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <p
+              role="alert"
+              data-testid="status-error"
+              className="rounded-lg border border-destructive/40 bg-destructive/10 px-3 py-2.5 text-sm text-red-300"
+            >
+              {result.message}
+            </p>
+          </CardContent>
+        </Card>
       )}
 
-      <p className="status-actions">
-        <Link className="text-link" href="/">
+      <div className="mt-6 flex gap-5 text-sm">
+        <Link className="text-primary hover:underline" href="/">
           Back to workspace
         </Link>
-        <a className="text-link" href="/status">
+        <Link className="text-muted-foreground hover:text-foreground" href="/status">
           Refresh
-        </a>
-      </p>
+        </Link>
+      </div>
     </main>
+  );
+}
+
+function Row({
+  label,
+  children,
+}: {
+  label: string;
+  children: ReactNode;
+}) {
+  return (
+    <div className="flex items-baseline justify-between gap-4">
+      <span className="text-muted-foreground">{label}</span>
+      <span className="text-right">{children}</span>
+    </div>
   );
 }

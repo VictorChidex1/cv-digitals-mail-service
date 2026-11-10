@@ -1,181 +1,126 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
+
 :root {
   color-scheme: dark;
-  --bg: #0d0f11;
-  --panel: #14181b;
+
+  --radius: 0.75rem;
+
+  --background: #0d0f11;
+  --foreground: #e8edf1;
+  --card: #14181b;
+  --card-foreground: #e8edf1;
+  --popover: #161b1f;
+  --popover-foreground: #e8edf1;
+  --primary: #3fbf77;
+  --primary-foreground: #05130c;
+  --secondary: #1b2126;
+  --secondary-foreground: #e8edf1;
+  --muted: #1b2126;
+  --muted-foreground: #8b979f;
+  --accent: #1f262c;
+  --accent-foreground: #e8edf1;
+  --destructive: #d4574f;
+  --destructive-foreground: #1a0807;
   --border: #262d32;
-  --text: #e8edf1;
-  --muted: #8b979f;
-  --ok: #3fbf77;
-  --warn: #d9a441;
-  --err: #d4574f;
+  --input: #262d32;
+  --ring: #3fbf77;
+
+  --sidebar: #0f1214;
+  --sidebar-foreground: #e8edf1;
+  --sidebar-primary: #3fbf77;
+  --sidebar-primary-foreground: #05130c;
+  --sidebar-accent: #1b2126;
+  --sidebar-accent-foreground: #e8edf1;
+  --sidebar-border: #262d32;
+  --sidebar-ring: #3fbf77;
+
+  --chart-1: #3fbf77;
+  --chart-2: #7fb2e5;
+  --chart-3: #d9a441;
+  --chart-4: #d4574f;
+  --chart-5: #9b8cf0;
 }
 
-* {
-  box-sizing: border-box;
+@theme inline {
+  --font-sans:
+    ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
+  --font-heading: var(--font-sans);
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+
+  --radius-sm: calc(var(--radius) - 6px);
+  --radius-md: calc(var(--radius) - 3px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
 }
 
-html,
-body {
-  margin: 0;
-  padding: 0;
-}
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
 
-body {
-  background: var(--bg);
-  color: var(--text);
-  font-family:
-    ui-sans-serif,
-    -apple-system,
-    BlinkMacSystemFont,
-    "Segoe UI",
-    sans-serif;
-  line-height: 1.55;
-}
+  html {
+    color-scheme: dark;
+  }
 
-main {
-  max-width: 880px;
-  margin: 0 auto;
-  padding: 48px 24px 72px;
-}
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
 
-.eyebrow {
-  margin: 0 0 8px;
-  color: var(--muted);
-  font-size: 12px;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-}
+  ::selection {
+    background: rgba(63, 191, 119, 0.25);
+  }
 
-h1 {
-  margin: 0 0 8px;
-  font-size: 30px;
-  font-weight: 600;
-  letter-spacing: -0.01em;
-}
-
-.lede {
-  margin: 0 0 32px;
-  color: var(--muted);
-  max-width: 60ch;
-}
-
-.panel {
-  background: var(--panel);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 18px 20px;
-  margin-bottom: 16px;
-}
-
-.panel h2 {
-  margin: 0 0 12px;
-  font-size: 12px;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--muted);
-  font-weight: 600;
-}
-
-dl {
-  display: grid;
-  grid-template-columns: 200px 1fr;
-  gap: 8px 16px;
-  margin: 0;
-  font-size: 14px;
-}
-
-dt {
-  color: var(--muted);
-}
-
-dd {
-  margin: 0;
-  font-variant-numeric: tabular-nums;
-}
-
-.state {
-  font-weight: 600;
-}
-
-.state-ok {
-  color: var(--ok);
-}
-
-.state-warn {
-  color: var(--warn);
-}
-
-.state-err {
-  color: var(--err);
-}
-
-ul.checks {
-  margin: 0;
-  padding-left: 18px;
-  font-size: 14px;
-  color: var(--muted);
-}
-
-.app-header {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 16px;
-  margin-bottom: 26px;
-}
-
-.app-header-actions {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.session-email {
-  color: var(--muted);
-  font-size: 13px;
-}
-
-.ghost-button {
-  padding: 8px 14px;
-  border-radius: 8px;
-  border: 1px solid var(--border);
-  background: #121619;
-  color: var(--text);
-  font-size: 13px;
-  font-family: inherit;
-  cursor: pointer;
-}
-
-.ghost-button:hover {
-  background: #171c20;
-}
-
-@media (max-width: 640px) {
-  .app-header {
-    flex-direction: column;
+  :focus-visible {
+    outline-width: 2px;
+    outline-offset: 2px;
   }
 }
 
-.status-actions {
-  display: flex;
-  gap: 18px;
-  margin: 14px 0 0;
-}
-
-.text-link {
-  color: #7fb2e5;
-  font-size: 14px;
-  text-decoration: none;
-}
-
-.text-link:hover {
-  text-decoration: underline;
-}
-
-code {
-  padding: 1px 5px;
-  border: 1px solid var(--border);
-  border-radius: 4px;
-  background: #0f1214;
-  font-size: 0.9em;
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }

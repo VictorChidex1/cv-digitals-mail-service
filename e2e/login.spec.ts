@@ -50,7 +50,12 @@ test.describe("login", () => {
     await expect(page.getByTestId("verified-uid")).not.toBeEmpty();
     await expect(page.getByTestId("verified-provider")).toHaveText("password");
 
-    await page.getByRole("button", { name: "Sign out" }).click();
+    await page.getByRole("button", { name: "Account menu" }).click();
+    await page.getByRole("menuitem", { name: "Sign out" }).click();
+    await page
+      .getByRole("dialog")
+      .getByRole("button", { name: "Sign out" })
+      .click();
     await expect(page).toHaveURL(/\/login$/);
   });
 
